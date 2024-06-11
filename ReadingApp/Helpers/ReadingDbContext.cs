@@ -11,8 +11,8 @@ namespace ReadingApp.Helpers
 
         public DbSet<BookDbModel> Books { get; set; }
         public DbSet<AuthorDbModel> Authors { get; set; }
+        public DbSet<CategorieDbModel> Categories { get; set; }
         //public DbSet<GenreDbModel> Genres { get; set; }
-        //public DbSet<CategorieDbModel> Categories { get; set; }
 
 
         public ReadingDbContext(DbContextOptions<ReadingDbContext> options) : base(options) { }
@@ -28,15 +28,14 @@ namespace ReadingApp.Helpers
                     r => r.HasOne<BookDbModel>().WithMany().HasForeignKey(x => x.BookId)
                 );
 
-            //modelBuilder.Entity<BookDbModel>()
-            //    .HasOne(b => b.Genre)
-            //    .WithMany(g => g.Books)
-            //    .HasForeignKey(b => b.GenreId);
-            //
-            //modelBuilder.Entity<BookDbModel>()
-            //    .HasOne(b => b.Category)
-            //    .WithMany(c => c.Books)
-            //    .HasForeignKey(b => b.CategoryId);
+            modelBuilder.Entity<BookDbModel>()
+                .HasMany(x => x.Categories)
+                .WithMany(x => x.Books)
+                .UsingEntity<BookCategory>
+                (
+                    l => l.HasOne<CategorieDbModel>().WithMany().HasForeignKey(x => x.CategoryId),
+                    r => r.HasOne<BookDbModel>().WithMany().HasForeignKey(x => x.BookId)
+                );
         }
     }
 }

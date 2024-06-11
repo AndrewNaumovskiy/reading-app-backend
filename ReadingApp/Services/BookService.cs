@@ -8,15 +8,12 @@ namespace ReadingApp.Services
     {
         private readonly IDbContextFactory<ReadingDbContext> _dbContextFactory;
 
-        private List<BookModel> _books;
+        private readonly List<BookModel> _books;
         public BookService(IDbContextFactory<ReadingDbContext> dbContextFactory)
         {
             _dbContextFactory = dbContextFactory;
 
             _books = new List<BookModel>();
-
-            //var text = File.ReadAllText("books.json");
-            //_books = JsonSerializer.Deserialize<List<BookModel>>(text);
         }
 
         public async Task<List<BookModel>> GetBooks()
@@ -30,12 +27,14 @@ namespace ReadingApp.Services
             {
                 var books = await db.Books
                     .AsNoTracking()
-                    .Include(b => b.Authors)
+                    .Include(x => x.Authors)
+                    .Include(x => x.Categories)
                     .ToListAsync();
 
                 foreach(var book in books)
                 {
                     var authors = book.Authors.Select(x => x.Name).ToList();
+                    var categories = book.Categories.Select(x => x.Name).ToList();
                     
                     _books.Add(new BookModel()
                     {
@@ -45,7 +44,13 @@ namespace ReadingApp.Services
                         Description = book.Description,
                         PageCount = book.PageCount,
                         Language = book.Language,
-                        Authors = authors
+                        Authors = authors,
+                        Categories = categories,
+                        ImageLinks = new ImageLinks()
+                        {
+                            Thumbnail = book.Thumbnail,
+                            SmallThumbnail = book.SmallThumbnail
+                        }
                     });
                 }
             }

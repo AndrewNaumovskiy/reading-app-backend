@@ -14,6 +14,8 @@ namespace ReadingApp.Models.DbModels
         // TODO: rework with book edition
         public int PageCount { get; set; }
         public string Language { get; set; }
+        public string Thumbnail { get; set; }
+        public string SmallThumbnail { get; set; }
 
         public List<AuthorDbModel> Authors { get; set; } = [];
         public List<CategorieDbModel> Categories { get; set; } = [];
