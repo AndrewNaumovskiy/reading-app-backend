@@ -21,9 +21,10 @@ namespace ReadingApp.Controllers
         [Route("")]
         public async Task<ActionResult<ResponseModel<GetBooksData, IError>>> GetBooks()
         {
+            var books = await _bookService.GetBooks();
             return Ok(new ResponseModel<GetBooksData, IError>()
             {
-                Data = new GetBooksData(_bookService.GetBooks())
+                Data = new GetBooksData(books)
             });
         }
     }
