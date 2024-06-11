@@ -1,4 +1,6 @@
-﻿namespace ReadingApp.Models
+﻿using ReadingApp.Models.DbModels;
+
+namespace ReadingApp.Models
 {
     public class ResponseModel<D, E>
         where D : IData
@@ -32,6 +34,15 @@
         public GetBooksData(List<BookModel> books)
         {
             Books = books;
+        }
+    }
+
+    public class GetUserData : IData
+    {
+        public UserDbModel User { get; set; }
+        public GetUserData(UserDbModel user)
+        {
+            User = user;
         }
     }
 }

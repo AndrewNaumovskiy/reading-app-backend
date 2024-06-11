@@ -1,6 +1,8 @@
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Net.Http.Headers;
+using ReadingApp.Helpers;
 using ReadingApp.Services;
+using Microsoft.Net.Http.Headers;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<BookService>();
+
+builder.Services.AddPooledDbContextFactory<ReadingDbContext>(options =>
+{
+    var connString = "server=localhost;database=reading;uid=root;password=admin";
+    ServerVersion server = ServerVersion.AutoDetect(connString);
+    options.UseMySql(connString, server);
+    options.EnableServiceProviderCaching(false);
+});
 
 builder.Services.AddCors(options =>
 {
