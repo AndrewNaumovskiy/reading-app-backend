@@ -44,5 +44,75 @@ namespace ReadingApp.Controllers
                 Data = new StartSessionData(result),
             });
         }
+
+        [HttpPost]
+        [EnableCors]
+        [Route("pause")]
+        public async Task<ActionResult<ResponseModel<StatusData, IError>>> PauseSession([FromBody] PauseSessionRequestModel body)
+        {
+            using(var db = await _dbContext.CreateDbContextAsync())
+            {
+                var session = await db.Sessions.FirstOrDefaultAsync(x => x.Id == body.SessionId);
+                if (session == null)
+                    return Ok(new ResponseModel<IData, Error>()
+                    {
+                        Error = new Error("No session found")
+                    });
+
+                session.Status = "paused";
+                await db.SaveChangesAsync();
+            }
+
+            return Ok(new ResponseModel<StatusData, IError>()
+            {
+                Data = new StatusData()
+            });
+        }
+
+        [HttpPost]
+        [EnableCors]
+        [Route("finish")]
+        public async Task<ActionResult<ResponseModel<StatusData, IError>>> FinishSession([FromBody] PauseSessionRequestModel body)
+        {
+            using (var db = await _dbContext.CreateDbContextAsync())
+            {
+                var session = await db.Sessions.FirstOrDefaultAsync(x => x.Id == body.SessionId);
+                if (session == null)
+                    return Ok(new ResponseModel<IData, Error>()
+                    {
+                        Error = new Error("No session found")
+                    });
+
+                session.Status = "finished";
+                await db.SaveChangesAsync();
+            }
+
+            return Ok(new ResponseModel<StatusData, IError>()
+            {
+                Data = new StatusData()
+            });
+        }
+
+        [HttpGet]
+        [EnableCors]
+        [Route("checkUser")]
+        public async Task<ActionResult<ResponseModel<CheckUserSessionData, IError>>> CheckUserSessions([FromQuery] int userId)
+        {
+            using (var db = await _dbContext.CreateDbContextAsync())
+            {
+                var session = await db.Sessions.FirstOrDefaultAsync(x => x.UserId == userId && x.Status != "finished");
+                if (session == null)
+                    return Ok(new ResponseModel<CheckUserSessionData, IError>()
+                    {
+                        Data = new CheckUserSessionData(false, -1)
+                    });
+
+
+                return Ok(new ResponseModel<CheckUserSessionData, IError>()
+                {
+                    Data = new CheckUserSessionData(true, session.Id)
+                });
+            }
+        }
     }
 }

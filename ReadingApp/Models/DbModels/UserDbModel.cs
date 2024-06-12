@@ -8,5 +8,7 @@ namespace ReadingApp.Models.DbModels
         public int Id { get; set; }
         public string Nickname { get; set; }
         public string Locale { get; set; }
+
+        public List<SessionDbModel> Sessions { get; set; } = [];
     }
 }

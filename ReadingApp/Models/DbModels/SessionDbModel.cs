@@ -9,5 +9,7 @@ namespace ReadingApp.Models.DbModels
         public int UserId { get; set; }
         public int BookId { get; set; }
         public string Status { get; set; } // started, paused, finished
+
+        public UserDbModel User { get; set; }
     }
 }

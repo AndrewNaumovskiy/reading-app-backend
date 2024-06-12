@@ -38,6 +38,11 @@ namespace ReadingApp.Helpers
                     l => l.HasOne<CategorieDbModel>().WithMany().HasForeignKey(x => x.CategoryId),
                     r => r.HasOne<BookDbModel>().WithMany().HasForeignKey(x => x.BookId)
                 );
+
+            modelBuilder.Entity<SessionDbModel>()
+                .HasOne(x => x.User)
+                .WithMany(x => x.Sessions)
+                .HasForeignKey(x => x.UserId);
         }
     }
 }

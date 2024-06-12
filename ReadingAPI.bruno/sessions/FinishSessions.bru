@@ -1,0 +1,17 @@
+meta {
+  name: FinishSessions
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{URL}}api/sessions/finish
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "sessionId" : 1
+  }
+}

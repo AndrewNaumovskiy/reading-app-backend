@@ -54,4 +54,28 @@ namespace ReadingApp.Models
             SessionId = id;
         }
     }
+    public class CheckUserSessionData : IData
+    {
+        public bool HasSessionPending { get; set; }
+        public int SessionId { get; set; }
+        public CheckUserSessionData(bool hasSessions, int sessionId)
+        {
+            HasSessionPending = hasSessions;
+            SessionId = sessionId;
+        }
+    }
+
+
+
+
+
+    public class StatusData : IData
+    {
+        public string Status { get; set; }
+        public StatusData()
+        {
+            Status = "Ok";
+        }
+    }
+
 }
