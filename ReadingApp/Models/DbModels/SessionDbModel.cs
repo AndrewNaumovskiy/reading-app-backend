@@ -11,5 +11,6 @@ namespace ReadingApp.Models.DbModels
         public string Status { get; set; } // started, paused, finished
 
         public UserDbModel User { get; set; }
+        public List<SessionActionDbModel> Actions { get; set; } = [];
     }
 }

@@ -58,10 +58,24 @@ namespace ReadingApp.Models
     {
         public bool HasSessionPending { get; set; }
         public int SessionId { get; set; }
-        public CheckUserSessionData(bool hasSessions, int sessionId)
+
+        public DateTime? StartTime { get; set; }
+        public int SecondsReadForPreviousActions { get; set; }
+
+        public CheckUserSessionData()
+        {
+            HasSessionPending = false;
+            SessionId = -1;
+            StartTime = null;
+            SecondsReadForPreviousActions = 0;
+        }
+
+        public CheckUserSessionData(bool hasSessions, int sessionId, DateTime? startTime, int secondsReadForPreviousActions)
         {
             HasSessionPending = hasSessions;
             SessionId = sessionId;
+            StartTime = startTime;
+            SecondsReadForPreviousActions = secondsReadForPreviousActions;
         }
     }
 

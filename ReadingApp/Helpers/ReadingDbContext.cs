@@ -16,6 +16,7 @@ namespace ReadingApp.Helpers
 
         
         public DbSet<SessionDbModel> Sessions { get; set; }
+        
 
         public ReadingDbContext(DbContextOptions<ReadingDbContext> options) : base(options) { }
 
@@ -43,6 +44,11 @@ namespace ReadingApp.Helpers
                 .HasOne(x => x.User)
                 .WithMany(x => x.Sessions)
                 .HasForeignKey(x => x.UserId);
+
+            modelBuilder.Entity<SessionDbModel>()
+                .HasMany(x => x.Actions)
+                .WithOne(x => x.Session)
+                .HasForeignKey(x => x.SessionId);
         }
     }
 }
