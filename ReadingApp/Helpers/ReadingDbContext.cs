@@ -14,6 +14,8 @@ namespace ReadingApp.Helpers
         public DbSet<CategorieDbModel> Categories { get; set; }
         //public DbSet<GenreDbModel> Genres { get; set; }
 
+        
+        public DbSet<SessionDbModel> Sessions { get; set; }
 
         public ReadingDbContext(DbContextOptions<ReadingDbContext> options) : base(options) { }
 

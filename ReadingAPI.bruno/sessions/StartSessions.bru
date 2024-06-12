@@ -1,0 +1,18 @@
+meta {
+  name: StartSessions
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{URL}}api/sessions/start
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "userId": 1,
+    "bookId": 1
+  }
+}

@@ -45,4 +45,13 @@ namespace ReadingApp.Models
             User = user;
         }
     }
+
+    public class StartSessionData : IData
+    {
+        public int SessionId { get; set; }
+        public StartSessionData(int id)
+        {
+            SessionId = id;
+        }
+    }
 }
