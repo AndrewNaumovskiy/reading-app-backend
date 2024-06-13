@@ -24,6 +24,7 @@ namespace ReadingApp.Controllers
         public async Task<ActionResult<ResponseModel<StartSessionData, IError>>> StartSession([FromBody] StartSessionRequestModel body)
         {
             int result = -1;
+            DateTime startTime = DateTime.UtcNow;
 
             const string started = "started";
 
@@ -37,7 +38,7 @@ namespace ReadingApp.Controllers
                     new SessionActionDbModel
                     {
                         Status = started,
-                        Started = DateTime.UtcNow,
+                        Started = startTime,
                         Finished = null
                     }
                 }
@@ -52,15 +53,18 @@ namespace ReadingApp.Controllers
 
             return Ok(new ResponseModel<StartSessionData, IError>()
             {
-                Data = new StartSessionData(result),
+                Data = new StartSessionData(result, startTime),
             });
         }
 
         [HttpPost]
         [EnableCors]
         [Route("pause")]
-        public async Task<ActionResult<ResponseModel<StatusData, IError>>> PauseSession([FromBody] PauseSessionRequestModel body)
+        public async Task<ActionResult<ResponseModel<PauseSessionData, IError>>> PauseSession([FromBody] PauseSessionRequestModel body)
         {
+            int result = -1;
+            int secondsRead = 0;
+
             using (var db = await _dbContext.CreateDbContextAsync())
             {
                 var session = await db.Sessions
@@ -79,20 +83,29 @@ namespace ReadingApp.Controllers
                 lastAction.Finished = DateTime.UtcNow;
                 lastAction.Status = "finished";
 
+                foreach(var item in session.Actions)
+                {
+                    secondsRead += (int)(item.Finished! - item.Started)?.TotalSeconds;
+                }
+
                 await db.SaveChangesAsync();
             }
 
-            return Ok(new ResponseModel<StatusData, IError>()
+            return Ok(new ResponseModel<PauseSessionData, IError>()
             {
-                Data = new StatusData()
+                Data = new PauseSessionData(result, secondsRead)
             });
         }
 
         [HttpPost]
         [EnableCors]
         [Route("resume")]
-        public async Task<ActionResult<ResponseModel<StatusData, IError>>> ResumeSession([FromBody] PauseSessionRequestModel body)
+        public async Task<ActionResult<ResponseModel<ResumeSessionData, IError>>> ResumeSession([FromBody] PauseSessionRequestModel body)
         {
+            int result = -1;
+            DateTime startTime = DateTime.UtcNow;
+            int secondsRead = 0;
+
             using (var db = await _dbContext.CreateDbContextAsync())
             {
                 var session = await db.Sessions
@@ -107,27 +120,34 @@ namespace ReadingApp.Controllers
 
                 session.Status = "started";
 
+                foreach (var item in session.Actions)
+                {
+                    secondsRead += (int)(item.Finished! - item.Started)?.TotalSeconds;
+                }
+
                 session.Actions.Add(new SessionActionDbModel
                 {
                     Status = "started",
-                    Started = DateTime.UtcNow,
+                    Started = startTime,
                     Finished = null
                 });
 
                 await db.SaveChangesAsync();
             }
 
-            return Ok(new ResponseModel<StatusData, IError>()
+            return Ok(new ResponseModel<ResumeSessionData, IError>()
             {
-                Data = new StatusData()
+                Data = new ResumeSessionData(result, startTime, secondsRead)
             });
         }
 
         [HttpPost]
         [EnableCors]
         [Route("finish")]
-        public async Task<ActionResult<ResponseModel<StatusData, IError>>> FinishSession([FromBody] PauseSessionRequestModel body)
+        public async Task<ActionResult<ResponseModel<FinishSessionData, IError>>> FinishSession([FromBody] PauseSessionRequestModel body)
         {
+            int secondsRead = 0;
+
             using (var db = await _dbContext.CreateDbContextAsync())
             {
                 var session = await db.Sessions
@@ -146,12 +166,17 @@ namespace ReadingApp.Controllers
                 lastAction.Finished = DateTime.UtcNow;
                 lastAction.Status = "finished";
 
+                foreach(var item in session.Actions)
+                {
+                    secondsRead += (int)(item.Finished! - item.Started)?.TotalSeconds;
+                }
+
                 await db.SaveChangesAsync();
             }
 
-            return Ok(new ResponseModel<StatusData, IError>()
+            return Ok(new ResponseModel<FinishSessionData, IError>()
             {
-                Data = new StatusData()
+                Data = new FinishSessionData(secondsRead)
             });
         }
 
