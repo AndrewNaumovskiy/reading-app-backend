@@ -10,5 +10,6 @@ namespace ReadingApp.Models.DbModels
         public string Locale { get; set; }
 
         public List<SessionDbModel> Sessions { get; set; } = [];
+        public List<UserRateDbModel> UserRates { get; set; } = [];
     }
 }

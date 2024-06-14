@@ -1,0 +1,15 @@
+meta {
+  name: GetBookInfoById
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{URL}}api/books/2
+  body: none
+  auth: none
+}
+
+params:query {
+  ~userId: 1
+}

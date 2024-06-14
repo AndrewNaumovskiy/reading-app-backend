@@ -2,8 +2,8 @@
 
 namespace ReadingApp.Models.DbModels
 {
-    [Table("genres")]
-    public class GenreDbModel
+    [Table("categories")]
+    public class CategoryDbModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

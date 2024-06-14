@@ -1,0 +1,21 @@
+meta {
+  name: UpdateBookUserRate
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{URL}}api/books/updateRate
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "userId": 1,
+    "bookId": 2,
+    "score": 0,
+    "statusId": 4,
+    "pages": 0
+  }
+}

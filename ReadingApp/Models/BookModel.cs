@@ -1,4 +1,6 @@
-﻿namespace ReadingApp.Models
+﻿using ReadingApp.Models.DbModels;
+
+namespace ReadingApp.Models
 {
     public class BookModel
     {
@@ -9,8 +11,37 @@
         public string Description { get; set; }
         public int PageCount { get; set; }
         public List<string> Categories { get; set; }
+        public List<string> Genres { get; set; }
         public ImageLinks ImageLinks { get; set; }
         public string Language { get; set; }
+        public float Score { get; set; }
+        public string Status { get; set; } // announced, ongoing, released, latest - "release not sooner than 1 month"
+        public string Rating { get; set; }
+
+        public BookModel() { }
+
+        public BookModel(BookDbModel dbModel)
+        {
+            Id = dbModel.Id.ToString();
+            Title = dbModel.Title;
+            PublishedDate = dbModel.PublishedDate;
+            Description = dbModel.Description;
+            PageCount = dbModel.PageCount;
+            Language = dbModel.Language;
+            Score = dbModel.Score;
+            Status = dbModel.Status;
+            Rating = dbModel.Rating?.Name;
+
+            Authors = dbModel.Authors?.Select(x => x.Name).ToList();
+            Categories = dbModel.Categories?.Select(x => x.Name).ToList();
+            Genres = dbModel.Genres?.Select(x => x.Name).ToList();
+
+            ImageLinks = new ImageLinks()
+            {
+                Thumbnail = dbModel.Thumbnail,
+                SmallThumbnail = dbModel.SmallThumbnail
+            };
+        }
     }
 
     public class ImageLinks

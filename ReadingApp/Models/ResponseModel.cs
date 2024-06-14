@@ -36,6 +36,24 @@ namespace ReadingApp.Models
             Books = books;
         }
     }
+    public class GetBookInformationData : IData
+    {
+        public BookInformationModel Info { get; set; }
+        public GetBookInformationData(BookInformationModel info)
+        {
+            Info = info;
+        }
+    }
+    public class UpdateUserRateData : IData
+    {
+        public UserRateModel UserRate { get; set; }
+        public UpdateUserRateData(UserRateModel userRate)
+        {
+            UserRate = userRate;
+        }
+    }
+
+
 
     public class GetUserData : IData
     {

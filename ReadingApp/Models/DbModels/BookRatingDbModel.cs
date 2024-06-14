@@ -2,12 +2,11 @@
 
 namespace ReadingApp.Models.DbModels
 {
-    [Table("genres")]
-    public class GenreDbModel
+    [Table("book_ratings")]
+    public class BookRatingDbModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
-        public List<BookDbModel> Books { get; set; } = [];
+        public string Description { get; set; }
     }
 }

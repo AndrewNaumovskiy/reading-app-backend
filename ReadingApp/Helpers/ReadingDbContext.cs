@@ -8,10 +8,11 @@ namespace ReadingApp.Helpers
     {
         public DbSet<UserDbModel> Users { get; set; }
 
+        public DbSet<UserRateDbModel> UserRates { get; set; }
 
         public DbSet<BookDbModel> Books { get; set; }
         public DbSet<AuthorDbModel> Authors { get; set; }
-        public DbSet<CategorieDbModel> Categories { get; set; }
+        public DbSet<CategoryDbModel> Categories { get; set; }
         //public DbSet<GenreDbModel> Genres { get; set; }
 
         
@@ -36,9 +37,44 @@ namespace ReadingApp.Helpers
                 .WithMany(x => x.Books)
                 .UsingEntity<BookCategory>
                 (
-                    l => l.HasOne<CategorieDbModel>().WithMany().HasForeignKey(x => x.CategoryId),
+                    l => l.HasOne<CategoryDbModel>().WithMany().HasForeignKey(x => x.CategoryId),
                     r => r.HasOne<BookDbModel>().WithMany().HasForeignKey(x => x.BookId)
                 );
+
+            modelBuilder.Entity<BookDbModel>()
+                .HasMany(x => x.Genres)
+                .WithMany(x => x.Books)
+                .UsingEntity<BookCategory>
+                (
+                    l => l.HasOne<GenreDbModel>().WithMany().HasForeignKey(x => x.CategoryId),
+                    r => r.HasOne<BookDbModel>().WithMany().HasForeignKey(x => x.BookId)
+                );
+
+            modelBuilder.Entity<BookDbModel>()
+                .HasOne(x => x.Rating)
+                .WithMany()
+                .HasForeignKey(x => x.RatingId);
+
+            modelBuilder.Entity<BookDbModel>()
+                .HasMany(x => x.UserRates)
+                .WithOne(x => x.Book)
+                .HasForeignKey(x => x.BookId);
+
+
+
+            modelBuilder.Entity<UserDbModel>()
+                .HasMany(x => x.UserRates)
+                .WithOne(x => x.User)
+                .HasForeignKey(x => x.UserId);
+
+
+
+            modelBuilder.Entity<UserRateDbModel>()
+                .HasOne(x => x.ReadStatus)
+                .WithMany()
+                .HasForeignKey(x => x.StatusId);
+
+
 
             modelBuilder.Entity<SessionDbModel>()
                 .HasOne(x => x.User)
