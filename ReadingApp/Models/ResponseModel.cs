@@ -45,4 +45,83 @@ namespace ReadingApp.Models
             User = user;
         }
     }
+
+    public class StartSessionData : IData
+    {
+        public int SessionId { get; set; }
+        public DateTime StartTime { get; set; }
+        public StartSessionData(int id, DateTime startTime)
+        {
+            SessionId = id;
+            StartTime = startTime;
+        }
+    }
+    public class PauseSessionData : IData
+    {
+        public int SessionId { get; set; }
+        public int SecondsRead { get; set; }
+        public PauseSessionData(int id, int seconds)
+        {
+            SessionId = id;
+            SecondsRead = seconds;
+        }
+    }
+    public class ResumeSessionData : IData
+    {
+        public int SessionId { get; set; }
+        public DateTime StartTime { get; set; }
+        public int SecondsRead { get; set; }
+        public ResumeSessionData(int id, DateTime start, int seconds)
+        {
+            SessionId = id;
+            StartTime = start;
+            SecondsRead = seconds;
+        }
+    }
+    public class FinishSessionData : IData
+    {
+        public int SecondsRead { get; set; }
+        public FinishSessionData(int seconds)
+        {
+            SecondsRead = seconds;
+        }
+    }
+    public class CheckUserSessionData : IData
+    {
+        public bool HasSessionPending { get; set; }
+        public int SessionId { get; set; }
+
+        public DateTime? StartTime { get; set; }
+        public int SecondsReadForPreviousActions { get; set; }
+
+        public CheckUserSessionData()
+        {
+            HasSessionPending = false;
+            SessionId = -1;
+            StartTime = null;
+            SecondsReadForPreviousActions = 0;
+        }
+
+        public CheckUserSessionData(bool hasSessions, int sessionId, DateTime? startTime, int secondsReadForPreviousActions)
+        {
+            HasSessionPending = hasSessions;
+            SessionId = sessionId;
+            StartTime = startTime;
+            SecondsReadForPreviousActions = secondsReadForPreviousActions;
+        }
+    }
+
+
+
+
+
+    public class StatusData : IData
+    {
+        public string Status { get; set; }
+        public StatusData()
+        {
+            Status = "Ok";
+        }
+    }
+
 }

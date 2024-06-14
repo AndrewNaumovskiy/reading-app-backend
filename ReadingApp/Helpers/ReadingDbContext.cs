@@ -14,6 +14,9 @@ namespace ReadingApp.Helpers
         public DbSet<CategorieDbModel> Categories { get; set; }
         //public DbSet<GenreDbModel> Genres { get; set; }
 
+        
+        public DbSet<SessionDbModel> Sessions { get; set; }
+        
 
         public ReadingDbContext(DbContextOptions<ReadingDbContext> options) : base(options) { }
 
@@ -36,6 +39,16 @@ namespace ReadingApp.Helpers
                     l => l.HasOne<CategorieDbModel>().WithMany().HasForeignKey(x => x.CategoryId),
                     r => r.HasOne<BookDbModel>().WithMany().HasForeignKey(x => x.BookId)
                 );
+
+            modelBuilder.Entity<SessionDbModel>()
+                .HasOne(x => x.User)
+                .WithMany(x => x.Sessions)
+                .HasForeignKey(x => x.UserId);
+
+            modelBuilder.Entity<SessionDbModel>()
+                .HasMany(x => x.Actions)
+                .WithOne(x => x.Session)
+                .HasForeignKey(x => x.SessionId);
         }
     }
 }

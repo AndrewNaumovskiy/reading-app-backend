@@ -1,0 +1,17 @@
+meta {
+  name: ResumeSessions
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{URL}}api/sessions/resume
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "sessionId" : 4
+  }
+}
