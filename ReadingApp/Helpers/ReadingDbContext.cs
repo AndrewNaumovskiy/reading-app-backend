@@ -75,6 +75,11 @@ namespace ReadingApp.Helpers
                 .HasForeignKey(x => x.StatusId);
 
 
+            modelBuilder.Entity<BookCommentDbModel>()
+                .HasOne(x => x.Book)
+                .WithMany(x => x.Comments)
+                .HasForeignKey(x => x.BookId);
+
 
             modelBuilder.Entity<SessionDbModel>()
                 .HasOne(x => x.User)

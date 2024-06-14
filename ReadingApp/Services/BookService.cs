@@ -58,6 +58,8 @@ namespace ReadingApp.Services
                         .Include(x => x.Genres)
                         .Include(x => x.Rating)
                         .Include(x => x.UserRates)
+                        .Include(x => x.Comments)
+                        .ThenInclude(x => x.User)
                         .FirstOrDefaultAsync(x => x.Id == id);
                 }
                 catch (Exception e)
@@ -78,6 +80,8 @@ namespace ReadingApp.Services
                 var firstUserRate = book.UserRates.FirstOrDefault(x => x.UserId == userId);
                 result.UserRate = new UserRateModel(firstUserRate);
             }
+
+            result.Comments = book.Comments.Select(x => new BookCommentModel(x)).ToList();
 
             return result;
         }

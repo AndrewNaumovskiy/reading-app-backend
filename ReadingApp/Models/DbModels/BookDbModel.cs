@@ -30,5 +30,7 @@ namespace ReadingApp.Models.DbModels
 
         public List<UserRateDbModel> UserRates { get; set; } = [];
         public BookRatingDbModel Rating { get; set; }
+        public List<BookCommentDbModel> Comments { get; set; } = [];
+
     }
 }
