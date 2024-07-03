@@ -110,8 +110,8 @@ namespace ReadingApp.Services
                 }
                 else
                 {
-                    userRate.Score = body.Score;
-                    userRate.Pages = body.Pages;
+                    //userRate.Score = body.Score;
+                    //userRate.Pages = body.Pages;
                     userRate.StatusId = body.StatusId;
                 }
 

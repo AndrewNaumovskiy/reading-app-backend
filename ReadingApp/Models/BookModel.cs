@@ -4,7 +4,7 @@ namespace ReadingApp.Models
 {
     public class BookModel
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; }
         public List<string> Authors { get; set; }
         public string PublishedDate { get; set; }
@@ -12,7 +12,8 @@ namespace ReadingApp.Models
         public int PageCount { get; set; }
         public List<string> Categories { get; set; }
         public List<string> Genres { get; set; }
-        public ImageLinks ImageLinks { get; set; }
+        public string Thumbnail { get; set; }
+        public string SmallThumbnail { get; set; }
         public string Language { get; set; }
         public float Score { get; set; }
         public string Status { get; set; } // announced, ongoing, released, latest - "release not sooner than 1 month"
@@ -22,11 +23,13 @@ namespace ReadingApp.Models
 
         public BookModel(BookDbModel dbModel)
         {
-            Id = dbModel.Id.ToString();
+            Id = dbModel.Id;
             Title = dbModel.Title;
             PublishedDate = dbModel.PublishedDate;
             Description = dbModel.Description;
             PageCount = dbModel.PageCount;
+            Thumbnail = dbModel.Thumbnail;
+            SmallThumbnail = dbModel.SmallThumbnail;
             Language = dbModel.Language;
             Score = dbModel.Score;
             Status = dbModel.Status;
@@ -35,20 +38,9 @@ namespace ReadingApp.Models
             Authors = dbModel.Authors?.Select(x => x.Name).ToList();
             Categories = dbModel.Categories?.Select(x => x.Name).ToList();
             Genres = dbModel.Genres?.Select(x => x.Name).ToList();
-
-            ImageLinks = new ImageLinks()
-            {
-                Thumbnail = dbModel.Thumbnail,
-                SmallThumbnail = dbModel.SmallThumbnail
-            };
         }
     }
 
-    public class ImageLinks
-    {
-        public string Thumbnail { get; set; }
-        public string SmallThumbnail { get; set; }
-    }
 
     /* Models for Google API
     public class BookKek
