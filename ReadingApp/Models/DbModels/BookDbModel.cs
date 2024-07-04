@@ -17,7 +17,20 @@ namespace ReadingApp.Models.DbModels
         public string Thumbnail { get; set; }
         public string SmallThumbnail { get; set; }
 
+        // calculated once a day or something with a job
+        public float Score { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
+        public string Status { get; set; } // announced, ongoing, released, latest - "release not sooner than 1 month"
+        public int RatingId { get; set; }
+
         public List<AuthorDbModel> Authors { get; set; } = [];
-        public List<CategorieDbModel> Categories { get; set; } = [];
+        public List<CategoryDbModel> Categories { get; set; } = [];
+        public List<GenreDbModel> Genres { get; set; } = [];
+
+        public List<UserRateDbModel> UserRates { get; set; } = [];
+        public BookRatingDbModel Rating { get; set; }
+        public List<BookCommentDbModel> Comments { get; set; } = [];
+
     }
 }

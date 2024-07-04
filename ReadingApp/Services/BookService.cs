@@ -1,5 +1,7 @@
 ﻿using ReadingApp.Models;
 using ReadingApp.Helpers;
+using ReadingApp.Models.DbModels;
+using ReadingApp.Models.RequestModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace ReadingApp.Services
@@ -25,37 +27,101 @@ namespace ReadingApp.Services
 
             using(var db = await _dbContextFactory.CreateDbContextAsync())
             {
+                // TODO: add pagination, optimize with select only needed fields
                 var books = await db.Books
                     .AsNoTracking()
-                    .Include(x => x.Authors)
-                    .Include(x => x.Categories)
                     .ToListAsync();
 
                 foreach(var book in books)
                 {
-                    var authors = book.Authors.Select(x => x.Name).ToList();
-                    var categories = book.Categories.Select(x => x.Name).ToList();
-                    
-                    _books.Add(new BookModel()
-                    {
-                        Id = book.Id.ToString(),
-                        Title = book.Title,
-                        PublishedDate = book.PublishedDate,
-                        Description = book.Description,
-                        PageCount = book.PageCount,
-                        Language = book.Language,
-                        Authors = authors,
-                        Categories = categories,
-                        ImageLinks = new ImageLinks()
-                        {
-                            Thumbnail = book.Thumbnail,
-                            SmallThumbnail = book.SmallThumbnail
-                        }
-                    });
+                    _books.Add(new BookModel(book));
                 }
             }
 
             return _books;
+        }
+    
+        public async Task<BookInformationModel> GetBookById(int id, int userId)
+        {
+            var result = new BookInformationModel();
+
+            BookDbModel? book = null;
+
+            using(var db = await _dbContextFactory.CreateDbContextAsync())
+            {
+                try
+                {
+                    book = await db.Books
+                        .AsNoTracking()
+                        .Include(x => x.Authors)
+                        .Include(x => x.Categories)
+                        .Include(x => x.Genres)
+                        .Include(x => x.Rating)
+                        .Include(x => x.UserRates)
+                        .Include(x => x.Comments)
+                        .ThenInclude(x => x.User)
+                        .FirstOrDefaultAsync(x => x.Id == id);
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+
+            if (book == null)
+                return result;
+
+            result.Book = new BookModel(book);
+
+            result.Rates = new BookRatesModel(book.UserRates);
+
+            if (userId != 0 && book.UserRates.Any(x => x.UserId == userId))
+            {
+                var firstUserRate = book.UserRates.FirstOrDefault(x => x.UserId == userId);
+                result.UserRate = new UserRateModel(firstUserRate);
+            }
+
+            result.Comments = book.Comments.Select(x => new BookCommentModel(x)).ToList();
+
+            return result;
+        }
+
+        public async Task<UserRateModel> UpdateUserRate(UpdateUserRateRequestModel body)
+        {
+            using(var db = await _dbContextFactory.CreateDbContextAsync())
+            {
+                var userRate = await db.UserRates
+                                    .FirstOrDefaultAsync(x => x.BookId == body.BookId && x.UserId == body.UserId);
+
+                if (userRate == null)
+                {
+                    var book = await db.Books.FirstOrDefaultAsync(x => x.Id == body.BookId);
+
+                    userRate = new UserRateDbModel()
+                    {
+                        BookId = body.BookId,
+                        UserId = body.UserId,
+                        Score = 0,
+                        StatusId = body.StatusId,
+                        PagesRead = 0,
+                        PagesCount = book.PageCount,
+                        Rereads = 0,
+                        Thoughts = ""
+                    };
+
+                    await db.UserRates.AddAsync(userRate);
+                }
+                else
+                {
+                    //userRate.Score = body.Score;
+                    //userRate.Pages = body.Pages;
+                    userRate.StatusId = body.StatusId;
+                }
+
+                await db.SaveChangesAsync();
+
+                return new UserRateModel(userRate);
+            }
         }
     }
 }
