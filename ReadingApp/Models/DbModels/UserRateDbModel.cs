@@ -10,7 +10,8 @@ namespace ReadingApp.Models.DbModels
         public int BookId { get; set; }
         public int Score { get; set; }
         public int StatusId { get; set; }
-        public int Pages { get; set; }
+        public int PagesRead { get; set; }
+        public int PagesCount { get; set; }
         public int Rereads { get; set; }
         public string Thoughts { get; set; }
 

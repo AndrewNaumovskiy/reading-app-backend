@@ -6,7 +6,8 @@ namespace ReadingApp.Models
     {
         public float Score { get; set; }
         public int ReadStatusId { get; set; }
-        public int Pages { get; set; }
+        public int PagesRead { get; set; }
+        public int PagesCount { get; set; }
         public int Rereads { get; set; }
         public string Thoughts { get; set; }
 
@@ -14,7 +15,8 @@ namespace ReadingApp.Models
         {
             Score = model.Score;
             ReadStatusId = model.StatusId;
-            Pages = model.Pages;
+            PagesRead = model.PagesRead;
+            PagesCount = model.PagesCount;
             Rereads = model.Rereads;
             Thoughts = model.Thoughts;
         }

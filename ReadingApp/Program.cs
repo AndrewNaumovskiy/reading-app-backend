@@ -21,7 +21,7 @@ builder.Services.AddPooledDbContextFactory<ReadingDbContext>(options =>
     ServerVersion server = ServerVersion.AutoDetect(connString);
     options.UseMySql(connString, server);
     options.EnableServiceProviderCaching(false);
-});
+}, 2);
 
 builder.Services.AddCors(options =>
 {

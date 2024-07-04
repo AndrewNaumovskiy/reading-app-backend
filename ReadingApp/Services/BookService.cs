@@ -95,13 +95,16 @@ namespace ReadingApp.Services
 
                 if (userRate == null)
                 {
+                    var book = await db.Books.FirstOrDefaultAsync(x => x.Id == body.BookId);
+
                     userRate = new UserRateDbModel()
                     {
                         BookId = body.BookId,
                         UserId = body.UserId,
                         Score = 0,
                         StatusId = body.StatusId,
-                        Pages = 0,
+                        PagesRead = 0,
+                        PagesCount = book.PageCount,
                         Rereads = 0,
                         Thoughts = ""
                     };
